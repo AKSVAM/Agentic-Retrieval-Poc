@@ -1,0 +1,22 @@
+{
+  "document_type": "goods_receipt_note",
+  "grn_number": "GRN-2024-002",
+  "date": "2024-02-08",
+  "vendor": "Global Supplies Co",
+  "vendor_gst": "27AABCG5678D1Z3",
+  "project": "Mumbai Office Renovation",
+  "warehouse": "Mumbai BKC Office - Ground Floor Reception",
+  "po_reference": "PO-2024-002",
+  "invoice_reference": "INV-2024-002",
+  "received_by": "Meena Patil, Facilities Coordinator",
+  "line_items": [
+    {"item": "Ergonomic Office Chair (set of 20)", "qty_ordered": 20, "qty_received": 20, "condition": "good"},
+    {"item": "Standing Desk (set of 10)", "qty_ordered": 10, "qty_received": 10, "condition": "good"},
+    {"item": "Whiteboard (1.8m x 1.2m)", "qty_ordered": 5, "qty_received": 5, "condition": "good"},
+    {"item": "Office Stationery Kit", "qty_ordered": 50, "qty_received": 50, "condition": "good"}
+  ],
+  "delivery_status": "complete",
+  "discrepancies": "none",
+  "quality_check": "passed",
+  "remarks": "All furniture assembled and placed as per floor plan."
+}

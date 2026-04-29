@@ -1,0 +1,25 @@
+{
+  "document_type": "purchase_order",
+  "po_number": "PO-2024-005",
+  "date": "2024-02-05",
+  "vendor": "Global Supplies Co",
+  "vendor_gst": "27AABCG5678D1Z3",
+  "vendor_address": "56 Market Street, Mumbai - 400001",
+  "buyer_department": "Sales Operations",
+  "project": "Delhi Sales Office Setup",
+  "delivery_address": "Tower B, Connaught Place, New Delhi - 110001",
+  "line_items": [
+    {"item": "Ergonomic Office Chair", "qty": 15, "unit_price": 12000, "total": 180000},
+    {"item": "Executive Desk (1.6m)", "qty": 15, "unit_price": 18000, "total": 270000},
+    {"item": "Storage Pedestal", "qty": 15, "unit_price": 5000, "total": 75000},
+    {"item": "Conference Table (10-seater)", "qty": 1, "unit_price": 65000, "total": 65000},
+    {"item": "Office Stationery Kit", "qty": 20, "unit_price": 500, "total": 10000}
+  ],
+  "subtotal": 600000,
+  "gst_18pct": 108000,
+  "total_amount": 708000,
+  "payment_terms": "Net 45",
+  "delivery_date": "2024-03-10",
+  "status": "approved",
+  "approved_by": "Anita Verma, VP Sales"
+}

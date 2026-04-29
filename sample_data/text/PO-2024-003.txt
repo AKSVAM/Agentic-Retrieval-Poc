@@ -1,0 +1,40 @@
+========================================
+          PURCHASE ORDER
+========================================
+PO Number    : PO-2024-003
+Date         : January 12, 2024
+Status       : APPROVED
+
+VENDOR
+------
+FastTrack Logistics
+88 Freight Nagar, Bangalore - 560024
+GSTIN: 29AABCF9012E1Z8
+
+SHIP TO / SERVICE AT
+--------------------
+IT Infrastructure Dept
+Presidio Corp India
+Plot 42, Electronic City, Bangalore - 560100
+Project: Bangalore Data Center Upgrade
+
+SERVICES ORDERED
+----------------
+No.  Description                            Qty    Unit Price      Amount
+1    Air Freight - Server Equipment           1    Rs   55,000   Rs    55,000
+2    Insurance - High Value Goods             1    Rs   14,927   Rs    14,927
+3    Last Mile Delivery & Installation Assist 1    Rs    8,000   Rs     8,000
+
+Note: This PO covers logistics and shipping for equipment procured under PO-2024-001
+      (Acme Technologies Ltd - Dell servers and UPS units).
+
+SUBTOTAL                                                  Rs   77,927
+GST @ 18%                                                 Rs   14,027
+TOTAL ORDER VALUE                                         Rs   91,954
+
+Payment Terms : Net 15
+Expected Completion : February 12, 2024
+
+Approved By  : Rajesh Kumar, CFO
+Approval Date: January 12, 2024
+========================================

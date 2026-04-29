@@ -1,0 +1,40 @@
+========================================
+               INVOICE
+========================================
+Invoice No   : INV-2024-001
+Date         : February 5, 2024
+Due Date     : March 6, 2024
+
+VENDOR
+------
+Acme Technologies Ltd
+123 Tech Park, Pune - 411014
+GSTIN: 27AABCA1234C1Z5
+
+BILL TO
+-------
+IT Infrastructure Dept
+Presidio Corp India
+Bangalore Data Center Upgrade Project
+
+PURCHASE ORDER REFERENCE
+------------------------
+PO Number : PO-2024-001
+PO Date   : January 10, 2024
+
+LINE ITEMS
+----------
+Description                     Qty    Unit Price      Amount
+Dell PowerEdge R750 Server         4    Rs 2,85,000   Rs 11,40,000
+APC Smart-UPS 3000VA               2    Rs   45,000   Rs    90,000
+Cat6 Network Cables (100m)        10    Rs    3,500   Rs    35,000
+
+SUBTOTAL                                              Rs 12,65,000
+GST @ 18%                                             Rs  2,27,700
+TOTAL AMOUNT DUE                                      Rs 14,92,700
+
+Payment Status: PENDING
+Payment Terms : Net 30
+
+Bank Details  : HDFC Bank | A/C: 5020012345678 | IFSC: HDFC0001234
+========================================

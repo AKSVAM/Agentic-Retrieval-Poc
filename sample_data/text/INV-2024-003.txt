@@ -1,0 +1,39 @@
+========================================
+               INVOICE
+========================================
+Invoice No   : INV-2024-003
+Date         : February 15, 2024
+Due Date     : March 1, 2024
+
+VENDOR
+------
+FastTrack Logistics
+88 Freight Nagar, Bangalore - 560024
+GSTIN: 29AABCF9012E1Z8
+
+BILL TO
+-------
+IT Infrastructure Dept
+Presidio Corp India
+Bangalore Data Center Upgrade Project
+
+PURCHASE ORDER REFERENCE
+------------------------
+PO Number : PO-2024-003
+PO Date   : January 12, 2024
+
+SERVICES RENDERED
+-----------------
+Description                                  Qty    Unit Price      Amount
+Air Freight Charges - Server Equipment         1    Rs   55,000   Rs    55,000
+Insurance - High Value Goods                   1    Rs   14,927   Rs    14,927
+Last Mile Delivery & Installation Assist       1    Rs    8,000   Rs     8,000
+
+SUBTOTAL                                                          Rs    77,927
+GST @ 18%                                                         Rs    14,027
+TOTAL AMOUNT DUE                                                  Rs    91,954
+
+Payment Status: PAID (February 28, 2024)
+
+Bank Details  : Axis Bank | A/C: 9876543210001 | IFSC: UTIB0000888
+========================================

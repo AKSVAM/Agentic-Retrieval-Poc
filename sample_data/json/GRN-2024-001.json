@@ -1,0 +1,21 @@
+{
+  "document_type": "goods_receipt_note",
+  "grn_number": "GRN-2024-001",
+  "date": "2024-02-12",
+  "vendor": "Acme Technologies Ltd",
+  "vendor_gst": "27AABCA1234C1Z5",
+  "project": "Bangalore Data Center Upgrade",
+  "warehouse": "Bangalore DC - Receiving Bay 2",
+  "po_reference": "PO-2024-001",
+  "invoice_reference": "INV-2024-001",
+  "received_by": "Suresh Nair, IT Infrastructure Lead",
+  "line_items": [
+    {"item": "Dell PowerEdge R750 Server", "qty_ordered": 4, "qty_received": 4, "condition": "good", "serial_numbers": ["SRV-DEL-001", "SRV-DEL-002", "SRV-DEL-003", "SRV-DEL-004"]},
+    {"item": "APC Smart-UPS 3000VA", "qty_ordered": 2, "qty_received": 2, "condition": "good", "serial_numbers": ["UPS-APC-001", "UPS-APC-002"]},
+    {"item": "Cat6 Network Cables (100m)", "qty_ordered": 10, "qty_received": 10, "condition": "good"}
+  ],
+  "delivery_status": "complete",
+  "discrepancies": "none",
+  "quality_check": "passed",
+  "remarks": "All items received in good condition. Servers racked and powered on."
+}

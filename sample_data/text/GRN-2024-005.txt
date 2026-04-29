@@ -1,0 +1,40 @@
+========================================
+        GOODS RECEIPT NOTE (GRN)
+========================================
+GRN Number   : GRN-2024-005
+Date         : March 18, 2024
+Delivery Status : COMPLETE (with minor discrepancy)
+
+VENDOR
+------
+Global Supplies Co
+GSTIN: 27AABCG5678D1Z3
+
+PO Reference     : PO-2024-005 (dated February 5, 2024)
+Invoice Reference: INV-2024-005 (dated March 12, 2024)
+
+RECEIVED AT
+-----------
+Delhi CP Office - Floor 3
+Project: Delhi Sales Office Setup
+Received By: Amit Singh, Sales IT Coordinator
+
+ITEMS RECEIVED
+--------------
+Item                              Ordered  Received  Condition
+Ergonomic Office Chair                 15       15     Good
+Executive Desk (1.6m)                  15       15     Good
+Storage Pedestal                       15       15     Good
+Conference Table (10-seater)            1        1     Minor scratch on edge
+Office Stationery Kit                  20       20     Good
+
+QUALITY CHECK : CONDITIONAL PASS
+DISCREPANCIES : Conference table has a minor scratch on left edge.
+                Vendor notified. Vendor to raise credit note of
+                Rs 3,250 against INV-2024-005.
+
+Remarks: All furniture assembled and placed on Floor 3. Conference table
+         damage is cosmetic and does not affect functionality.
+         Finance team to process credit note when received from
+         Global Supplies Co before releasing final payment.
+========================================

@@ -1,0 +1,37 @@
+========================================
+        GOODS RECEIPT NOTE (GRN)
+========================================
+GRN Number   : GRN-2024-001
+Date         : February 12, 2024
+Delivery Status : COMPLETE
+
+VENDOR
+------
+Acme Technologies Ltd
+GSTIN: 27AABCA1234C1Z5
+
+PO Reference     : PO-2024-001 (dated January 10, 2024)
+Invoice Reference: INV-2024-001 (dated February 5, 2024)
+
+RECEIVED AT
+-----------
+Bangalore DC - Receiving Bay 2
+Project: Bangalore Data Center Upgrade
+Received By: Suresh Nair, IT Infrastructure Lead
+
+ITEMS RECEIVED
+--------------
+Item                        Ordered  Received  Condition
+Dell PowerEdge R750 Server       4        4     Good
+  Serial Nos: SRV-DEL-001, SRV-DEL-002, SRV-DEL-003, SRV-DEL-004
+APC Smart-UPS 3000VA             2        2     Good
+  Serial Nos: UPS-APC-001, UPS-APC-002
+Cat6 Network Cables (100m)      10       10     Good
+
+QUALITY CHECK : PASSED
+DISCREPANCIES : None
+
+Remarks: All items received in good condition. All 4 servers racked,
+         cabled, and powered on successfully. UPS units installed and
+         tested. Network cables laid as per rack diagram.
+========================================

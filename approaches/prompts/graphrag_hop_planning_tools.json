@@ -1,0 +1,24 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "plan_hops",
+      "description": "Decide which entity IDs to follow next in the graph traversal, or return empty list to stop.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entity_ids_to_follow": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of entity_id values to fetch in the next hop. Return [] to stop traversal."
+          },
+          "reasoning": {
+            "type": "string",
+            "description": "Brief explanation of why these entities were chosen (or why traversal is stopping)."
+          }
+        },
+        "required": ["entity_ids_to_follow", "reasoning"]
+      }
+    }
+  }
+]

@@ -1,0 +1,40 @@
+========================================
+               INVOICE
+========================================
+Invoice No   : INV-2024-002
+Date         : February 10, 2024
+Due Date     : March 26, 2024
+
+VENDOR
+------
+Global Supplies Co
+56 Market Street, Mumbai - 400001
+GSTIN: 27AABCG5678D1Z3
+
+BILL TO
+-------
+Facilities Dept
+Presidio Corp India
+Mumbai Office Renovation Project
+
+PURCHASE ORDER REFERENCE
+------------------------
+PO Number : PO-2024-002
+PO Date   : January 15, 2024
+
+LINE ITEMS
+----------
+Description                     Qty    Unit Price      Amount
+Ergonomic Office Chair            20    Rs   12,000   Rs  2,40,000
+Standing Desk                     10    Rs   25,000   Rs  2,50,000
+Whiteboard (1.8m x 1.2m)          5    Rs    8,000   Rs    40,000
+Office Stationery Kit             50    Rs      500   Rs    25,000
+
+SUBTOTAL                                              Rs  5,55,000
+GST @ 18%                                             Rs    99,900
+TOTAL AMOUNT DUE                                      Rs  6,54,900
+
+Payment Status: PAID (March 20, 2024)
+
+Bank Details  : ICICI Bank | A/C: 0123456789012 | IFSC: ICIC0000123
+========================================

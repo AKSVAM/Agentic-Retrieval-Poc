@@ -1,0 +1,38 @@
+========================================
+          PURCHASE ORDER
+========================================
+PO Number    : PO-2024-001
+Date         : January 10, 2024
+Status       : APPROVED
+
+VENDOR
+------
+Acme Technologies Ltd
+123 Tech Park, Pune - 411014
+GSTIN: 27AABCA1234C1Z5
+
+SHIP TO
+-------
+IT Infrastructure Dept
+Presidio Corp India
+Plot 42, Electronic City, Bangalore - 560100
+Project: Bangalore Data Center Upgrade
+
+LINE ITEMS
+----------
+No.  Description                     Qty    Unit Price      Amount
+1    Dell PowerEdge R750 Server         4    Rs 2,85,000   Rs 11,40,000
+2    APC Smart-UPS 3000VA               2    Rs   45,000   Rs    90,000
+3    Cat6 Network Cables (100m)        10    Rs    3,500   Rs    35,000
+
+SUBTOTAL                                                  Rs 12,65,000
+GST @ 18%                                                 Rs  2,27,700
+TOTAL ORDER VALUE                                         Rs 14,92,700
+
+Payment Terms : Net 30
+Expected Delivery : February 10, 2024
+Note: Shipping for this order will be handled separately under PO-2024-003 (FastTrack Logistics).
+
+Approved By  : Rajesh Kumar, CFO
+Approval Date: January 11, 2024
+========================================

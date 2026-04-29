@@ -1,0 +1,27 @@
+{
+  "document_type": "invoice",
+  "invoice_number": "INV-2024-004",
+  "date": "2024-03-05",
+  "due_date": "2024-04-04",
+  "vendor": "Acme Technologies Ltd",
+  "vendor_gst": "27AABCA1234C1Z5",
+  "vendor_address": "123 Tech Park, Pune - 411014",
+  "bill_to": "Sales Operations Dept, Presidio Corp India",
+  "project": "Delhi Sales Office Setup",
+  "po_reference": "PO-2024-004",
+  "po_date": "2024-02-01",
+  "line_items": [
+    {"item": "HP EliteBook 840 G10 Laptop", "qty": 15, "unit_price": 95000, "total": 1425000},
+    {"item": "Dell 27\" Monitor P2722H", "qty": 15, "unit_price": 22000, "total": 330000},
+    {"item": "Cisco IP Phone 8841", "qty": 15, "unit_price": 18000, "total": 270000},
+    {"item": "Cisco Catalyst 2960 Switch (24-port)", "qty": 2, "unit_price": 45000, "total": 90000}
+  ],
+  "subtotal": 2115000,
+  "gst_18pct": 381270,
+  "total_amount": 2496270,
+  "payment_status": "partial",
+  "amount_paid": 1248135,
+  "balance_due": 1248135,
+  "bank_account": "HDFC Bank | A/C: 5020012345678 | IFSC: HDFC0001234",
+  "note": "50% advance paid on PO approval. Balance due on delivery."
+}

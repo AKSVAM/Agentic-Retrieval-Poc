@@ -1,0 +1,73 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border-radius: 10px 10px 0 0;
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.count {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  animation: pulse 1.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.8); }
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 0 0 10px 10px;
+  background: var(--bg-primary);
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.sk1 { height: 52px; }
+.sk2 { height: 44px; }
+.sk3 { height: 44px; opacity: 0.6; }
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}

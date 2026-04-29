@@ -1,0 +1,21 @@
+{
+  "document_type": "goods_receipt_note",
+  "grn_number": "GRN-2024-003",
+  "date": "2024-02-14",
+  "vendor": "FastTrack Logistics",
+  "vendor_gst": "29AABCF9012E1Z8",
+  "project": "Bangalore Data Center Upgrade",
+  "warehouse": "Bangalore DC - Receiving Bay 2",
+  "po_reference": "PO-2024-003",
+  "invoice_reference": "INV-2024-003",
+  "received_by": "Suresh Nair, IT Infrastructure Lead",
+  "line_items": [
+    {"item": "Air Freight Charges - Server Equipment", "qty_ordered": 1, "qty_received": 1, "condition": "service_completed"},
+    {"item": "Insurance - High Value Goods", "qty_ordered": 1, "qty_received": 1, "condition": "certificate_issued"},
+    {"item": "Last Mile Delivery & Installation Assist", "qty_ordered": 1, "qty_received": 1, "condition": "service_completed"}
+  ],
+  "delivery_status": "complete",
+  "discrepancies": "none",
+  "quality_check": "passed",
+  "remarks": "Freight service completed. All equipment delivered without damage. Insurance certificate number: IC-2024-88341."
+}

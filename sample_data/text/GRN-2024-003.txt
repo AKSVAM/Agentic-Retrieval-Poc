@@ -1,0 +1,37 @@
+========================================
+        GOODS RECEIPT NOTE (GRN)
+========================================
+GRN Number   : GRN-2024-003
+Date         : February 14, 2024
+Delivery Status : COMPLETE
+
+VENDOR
+------
+FastTrack Logistics
+GSTIN: 29AABCF9012E1Z8
+
+PO Reference     : PO-2024-003 (dated January 12, 2024)
+Invoice Reference: INV-2024-003 (dated February 15, 2024)
+
+SERVICE COMPLETED AT
+--------------------
+Bangalore DC - Receiving Bay 2
+Project: Bangalore Data Center Upgrade
+Confirmed By: Suresh Nair, IT Infrastructure Lead
+
+SERVICES CONFIRMED
+------------------
+Service                                    Status
+Air Freight - Server Equipment             Completed
+Insurance - High Value Goods               Certificate Issued (IC-2024-88341)
+Last Mile Delivery & Installation Assist   Completed
+
+QUALITY CHECK : PASSED
+DISCREPANCIES : None
+
+Remarks: All server equipment (procured under PO-2024-001) transported
+         from Mumbai airport and delivered to Bangalore DC without damage.
+         Insurance certificate IC-2024-88341 covers transit period
+         Jan 28 - Feb 12, 2024. Installation assistance completed on
+         Feb 12, 2024.
+========================================

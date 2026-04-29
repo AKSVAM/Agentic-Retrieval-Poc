@@ -1,0 +1,113 @@
+.root {
+  width: 100%;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #14532d;
+}
+
+.summaryDivider {
+  color: #86efac;
+}
+
+.summaryItem {
+  flex: 1;
+  min-width: 200px;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+  .divider {
+    display: none;
+  }
+}
+
+.divider {
+  background: var(--border-color);
+  align-self: stretch;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.colHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.colHeader[data-side="vector"] {
+  background: #fffbeb;
+}
+
+.colHeader[data-side="graphrag"] {
+  background: #eff6ff;
+}
+
+.colTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.colBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.colBadge[data-side="vector"] {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.colBadge[data-side="graphrag"] {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.colNote {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-bottom: none;
+  line-height: 1.5;
+  background: var(--bg-secondary);
+}
+
+/* Override ThinkingPanel's top border-radius since colNote sits above it */
+.col > div:nth-child(3) > div:first-child {
+  border-radius: 0;
+}

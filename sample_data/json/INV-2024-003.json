@@ -1,0 +1,24 @@
+{
+  "document_type": "invoice",
+  "invoice_number": "INV-2024-003",
+  "date": "2024-02-15",
+  "due_date": "2024-03-01",
+  "vendor": "FastTrack Logistics",
+  "vendor_gst": "29AABCF9012E1Z8",
+  "vendor_address": "88 Freight Nagar, Bangalore - 560024",
+  "bill_to": "IT Infrastructure Dept, Presidio Corp India",
+  "project": "Bangalore Data Center Upgrade",
+  "po_reference": "PO-2024-003",
+  "po_date": "2024-01-12",
+  "line_items": [
+    {"item": "Air Freight Charges - Server Equipment", "qty": 1, "unit_price": 55000, "total": 55000},
+    {"item": "Insurance - High Value Goods", "qty": 1, "unit_price": 14927, "total": 14927},
+    {"item": "Last Mile Delivery & Installation Assist", "qty": 1, "unit_price": 8000, "total": 8000}
+  ],
+  "subtotal": 77927,
+  "gst_18pct": 14027,
+  "total_amount": 91954,
+  "payment_status": "paid",
+  "payment_date": "2024-02-28",
+  "bank_account": "Axis Bank | A/C: 9876543210001 | IFSC: UTIB0000888"
+}

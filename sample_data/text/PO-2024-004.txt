@@ -1,0 +1,38 @@
+========================================
+          PURCHASE ORDER
+========================================
+PO Number    : PO-2024-004
+Date         : February 1, 2024
+Status       : APPROVED
+
+VENDOR
+------
+Acme Technologies Ltd
+123 Tech Park, Pune - 411014
+GSTIN: 27AABCA1234C1Z5
+
+SHIP TO
+-------
+Sales Operations Dept
+Presidio Corp India
+Tower B, Connaught Place, New Delhi - 110001
+Project: Delhi Sales Office Setup
+
+LINE ITEMS
+----------
+No.  Description                      Qty    Unit Price      Amount
+1    HP EliteBook 840 G10 Laptop        15    Rs   95,000   Rs 14,25,000
+2    Dell 27" Monitor P2722H            15    Rs   22,000   Rs  3,30,000
+3    Cisco IP Phone 8841                15    Rs   18,000   Rs  2,70,000
+4    Cisco Catalyst 2960 Switch (24p)    2    Rs   45,000   Rs    90,000
+
+SUBTOTAL                                                  Rs 21,15,000
+GST @ 18%                                                 Rs  3,81,270
+TOTAL ORDER VALUE                                         Rs 24,96,270
+
+Payment Terms : Net 30 (50% advance on approval)
+Expected Delivery : March 1, 2024
+
+Approved By  : Anita Verma, VP Sales
+Approval Date: February 2, 2024
+========================================

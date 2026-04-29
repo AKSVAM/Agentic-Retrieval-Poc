@@ -1,0 +1,45 @@
+========================================
+               INVOICE
+========================================
+Invoice No   : INV-2024-004
+Date         : March 5, 2024
+Due Date     : April 4, 2024
+
+VENDOR
+------
+Acme Technologies Ltd
+123 Tech Park, Pune - 411014
+GSTIN: 27AABCA1234C1Z5
+
+BILL TO
+-------
+Sales Operations Dept
+Presidio Corp India
+Delhi Sales Office Setup Project
+
+PURCHASE ORDER REFERENCE
+------------------------
+PO Number : PO-2024-004
+PO Date   : February 1, 2024
+
+LINE ITEMS
+----------
+Description                      Qty    Unit Price      Amount
+HP EliteBook 840 G10 Laptop        15    Rs   95,000   Rs 14,25,000
+Dell 27" Monitor P2722H            15    Rs   22,000   Rs  3,30,000
+Cisco IP Phone 8841                15    Rs   18,000   Rs  2,70,000
+Cisco Catalyst 2960 Switch (24p)    2    Rs   45,000   Rs    90,000
+
+SUBTOTAL                                               Rs 21,15,000
+GST @ 18%                                              Rs  3,81,270
+TOTAL AMOUNT DUE                                       Rs 24,96,270
+
+Payment Status : PARTIAL
+Amount Paid    : Rs 12,48,135 (50% advance paid on PO approval)
+Balance Due    : Rs 12,48,135
+
+Note: Balance payment due on complete delivery. 3 laptops and 3 monitors
+      pending delivery (see GRN-2024-004 for details).
+
+Bank Details  : HDFC Bank | A/C: 5020012345678 | IFSC: HDFC0001234
+========================================

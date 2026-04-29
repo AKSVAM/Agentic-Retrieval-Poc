@@ -1,0 +1,22 @@
+{
+  "document_type": "goods_receipt_note",
+  "grn_number": "GRN-2024-004",
+  "date": "2024-03-10",
+  "vendor": "Acme Technologies Ltd",
+  "vendor_gst": "27AABCA1234C1Z5",
+  "project": "Delhi Sales Office Setup",
+  "warehouse": "Delhi CP Office - IT Room",
+  "po_reference": "PO-2024-004",
+  "invoice_reference": "INV-2024-004",
+  "received_by": "Amit Singh, Sales IT Coordinator",
+  "line_items": [
+    {"item": "HP EliteBook 840 G10 Laptop", "qty_ordered": 15, "qty_received": 12, "condition": "good", "serial_numbers": ["LAP-HP-001","LAP-HP-002","LAP-HP-003","LAP-HP-004","LAP-HP-005","LAP-HP-006","LAP-HP-007","LAP-HP-008","LAP-HP-009","LAP-HP-010","LAP-HP-011","LAP-HP-012"]},
+    {"item": "Dell 27\" Monitor P2722H", "qty_ordered": 15, "qty_received": 12, "condition": "good"},
+    {"item": "Cisco IP Phone 8841", "qty_ordered": 15, "qty_received": 15, "condition": "good"},
+    {"item": "Cisco Catalyst 2960 Switch (24-port)", "qty_ordered": 2, "qty_received": 2, "condition": "good"}
+  ],
+  "delivery_status": "partial",
+  "discrepancies": "3 HP laptops and 3 monitors not received. Balance delivery expected by 2024-03-20.",
+  "quality_check": "passed_for_received_items",
+  "remarks": "Partial delivery accepted. Vendor to fulfill balance by March 20, 2024."
+}

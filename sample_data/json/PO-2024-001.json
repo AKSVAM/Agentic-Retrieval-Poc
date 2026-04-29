@@ -1,0 +1,24 @@
+{
+  "document_type": "purchase_order",
+  "po_number": "PO-2024-001",
+  "date": "2024-01-10",
+  "vendor": "Acme Technologies Ltd",
+  "vendor_gst": "27AABCA1234C1Z5",
+  "vendor_address": "123 Tech Park, Pune - 411014",
+  "buyer_department": "IT Infrastructure",
+  "project": "Bangalore Data Center Upgrade",
+  "delivery_address": "Plot 42, Electronic City, Bangalore - 560100",
+  "line_items": [
+    {"item": "Dell PowerEdge R750 Server", "qty": 4, "unit_price": 285000, "total": 1140000},
+    {"item": "APC Smart-UPS 3000VA", "qty": 2, "unit_price": 45000, "total": 90000},
+    {"item": "Cat6 Network Cables (100m)", "qty": 10, "unit_price": 3500, "total": 35000}
+  ],
+  "subtotal": 1265000,
+  "gst_18pct": 227700,
+  "total_amount": 1492700,
+  "payment_terms": "Net 30",
+  "delivery_date": "2024-02-10",
+  "status": "approved",
+  "approved_by": "Rajesh Kumar, CFO",
+  "related_shipping_po": "PO-2024-003"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "extract_query_entities",
+      "description": "Extract named entities from the user query that should be used as seeds for graph traversal.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "type": "array",
+            "description": "List of entities extracted from the query",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The entity name as mentioned in the query"
+                },
+                "entity_type": {
+                  "type": "string",
+                  "enum": ["vendor", "customer", "po", "invoice", "grn", "project", "item", "contact", "unknown"],
+                  "description": "The type of entity"
+                },
+                "search_phrase": {
+                  "type": "string",
+                  "description": "The canonical search phrase to use when searching the entity index"
+                }
+              },
+              "required": ["name", "entity_type", "search_phrase"]
+            }
+          }
+        },
+        "required": ["entities"]
+      }
+    }
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "document_type": "invoice",
+  "invoice_number": "INV-2024-001",
+  "date": "2024-02-05",
+  "due_date": "2024-03-06",
+  "vendor": "Acme Technologies Ltd",
+  "vendor_gst": "27AABCA1234C1Z5",
+  "vendor_address": "123 Tech Park, Pune - 411014",
+  "bill_to": "IT Infrastructure Dept, Presidio Corp India",
+  "project": "Bangalore Data Center Upgrade",
+  "po_reference": "PO-2024-001",
+  "po_date": "2024-01-10",
+  "line_items": [
+    {"item": "Dell PowerEdge R750 Server", "qty": 4, "unit_price": 285000, "total": 1140000},
+    {"item": "APC Smart-UPS 3000VA", "qty": 2, "unit_price": 45000, "total": 90000},
+    {"item": "Cat6 Network Cables (100m)", "qty": 10, "unit_price": 3500, "total": 35000}
+  ],
+  "subtotal": 1265000,
+  "gst_18pct": 227700,
+  "total_amount": 1492700,
+  "payment_status": "pending",
+  "bank_account": "HDFC Bank | A/C: 5020012345678 | IFSC: HDFC0001234"
+}

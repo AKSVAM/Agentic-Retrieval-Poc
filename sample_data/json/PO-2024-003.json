@@ -1,0 +1,24 @@
+{
+  "document_type": "purchase_order",
+  "po_number": "PO-2024-003",
+  "date": "2024-01-12",
+  "vendor": "FastTrack Logistics",
+  "vendor_gst": "29AABCF9012E1Z8",
+  "vendor_address": "88 Freight Nagar, Bangalore - 560024",
+  "buyer_department": "IT Infrastructure",
+  "project": "Bangalore Data Center Upgrade",
+  "delivery_address": "Plot 42, Electronic City, Bangalore - 560100",
+  "line_items": [
+    {"item": "Air Freight Charges - Server Equipment", "qty": 1, "unit_price": 55000, "total": 55000},
+    {"item": "Insurance - High Value Goods", "qty": 1, "unit_price": 14927, "total": 14927},
+    {"item": "Last Mile Delivery & Installation Assist", "qty": 1, "unit_price": 8000, "total": 8000}
+  ],
+  "subtotal": 77927,
+  "gst_18pct": 14027,
+  "total_amount": 91954,
+  "payment_terms": "Net 15",
+  "delivery_date": "2024-02-12",
+  "status": "approved",
+  "approved_by": "Rajesh Kumar, CFO",
+  "note": "Logistics for equipment procured under PO-2024-001"
+}

@@ -1,0 +1,152 @@
+{
+  "name": "procurement-chunks",
+  "fields": [
+    {
+      "name": "id",
+      "type": "Edm.String",
+      "key": true,
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "content",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": false,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false,
+      "analyzer": "en.microsoft"
+    },
+    {
+      "name": "sourcefile",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": true
+    },
+    {
+      "name": "sourcepage",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": true
+    },
+    {
+      "name": "document_type",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": true
+    },
+    {
+      "name": "vendor",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": true
+    },
+    {
+      "name": "project",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": true
+    },
+    {
+      "name": "storageUrl",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "contentVector",
+      "type": "Collection(Edm.Single)",
+      "searchable": true,
+      "retrievable": false,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "dimensions": 1024,
+      "vectorSearchProfile": "hnsw-profile"
+    },
+    {
+      "name": "allowedUsers",
+      "type": "Collection(Edm.String)",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": false,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "allowedGroups",
+      "type": "Collection(Edm.String)",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": false,
+      "sortable": false,
+      "facetable": false
+    }
+  ],
+  "vectorSearch": {
+    "algorithms": [
+      {
+        "name": "hnsw-algo",
+        "kind": "hnsw",
+        "hnswParameters": {
+          "metric": "cosine",
+          "m": 4,
+          "efConstruction": 400,
+          "efSearch": 500
+        }
+      }
+    ],
+    "compressions": [
+      {
+        "name": "bq-compression",
+        "kind": "binaryQuantization",
+        "rescoringOptions": {
+          "enableRescoring": true,
+          "defaultOversampling": 10.0,
+          "rescoreStorageMethod": "preserveOriginals"
+        }
+      }
+    ],
+    "profiles": [
+      {
+        "name": "hnsw-profile",
+        "algorithm": "hnsw-algo",
+        "compression": "bq-compression"
+      }
+    ]
+  },
+  "semantic": {
+    "configurations": [
+      {
+        "name": "semantic-config",
+        "prioritizedFields": {
+          "titleField": {"fieldName": "sourcepage"},
+          "contentFields": [{"fieldName": "content"}],
+          "keywordsFields": [{"fieldName": "vendor"}, {"fieldName": "project"}]
+        }
+      }
+    ]
+  }
+}

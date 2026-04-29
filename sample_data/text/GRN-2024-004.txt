@@ -1,0 +1,40 @@
+========================================
+        GOODS RECEIPT NOTE (GRN)
+========================================
+GRN Number   : GRN-2024-004
+Date         : March 10, 2024
+Delivery Status : PARTIAL
+
+VENDOR
+------
+Acme Technologies Ltd
+GSTIN: 27AABCA1234C1Z5
+
+PO Reference     : PO-2024-004 (dated February 1, 2024)
+Invoice Reference: INV-2024-004 (dated March 5, 2024)
+
+RECEIVED AT
+-----------
+Delhi CP Office - IT Room
+Project: Delhi Sales Office Setup
+Received By: Amit Singh, Sales IT Coordinator
+
+ITEMS RECEIVED
+--------------
+Item                              Ordered  Received  Condition
+HP EliteBook 840 G10 Laptop            15       12     Good
+  (Received: LAP-HP-001 to LAP-HP-012)
+  (Pending:  3 units, expected by March 20, 2024)
+Dell 27" Monitor P2722H                15       12     Good
+  (Pending:  3 units, expected by March 20, 2024)
+Cisco IP Phone 8841                    15       15     Good
+Cisco Catalyst 2960 Switch (24-port)    2        2     Good
+
+QUALITY CHECK : PASSED (for received items)
+DISCREPANCIES : 3 HP laptops and 3 Dell monitors not received.
+                Vendor confirms balance delivery by March 20, 2024.
+
+Remarks: Partial delivery accepted. Balance payment of Rs 12,48,135
+         (against INV-2024-004) will be released only after complete
+         delivery and final quality sign-off.
+========================================

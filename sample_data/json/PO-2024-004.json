@@ -1,0 +1,24 @@
+{
+  "document_type": "purchase_order",
+  "po_number": "PO-2024-004",
+  "date": "2024-02-01",
+  "vendor": "Acme Technologies Ltd",
+  "vendor_gst": "27AABCA1234C1Z5",
+  "vendor_address": "123 Tech Park, Pune - 411014",
+  "buyer_department": "Sales Operations",
+  "project": "Delhi Sales Office Setup",
+  "delivery_address": "Tower B, Connaught Place, New Delhi - 110001",
+  "line_items": [
+    {"item": "HP EliteBook 840 G10 Laptop", "qty": 15, "unit_price": 95000, "total": 1425000},
+    {"item": "Dell 27\" Monitor P2722H", "qty": 15, "unit_price": 22000, "total": 330000},
+    {"item": "Cisco IP Phone 8841", "qty": 15, "unit_price": 18000, "total": 270000},
+    {"item": "Cisco Catalyst 2960 Switch (24-port)", "qty": 2, "unit_price": 45000, "total": 90000}
+  ],
+  "subtotal": 2115000,
+  "gst_18pct": 381270,
+  "total_amount": 2496270,
+  "payment_terms": "Net 30",
+  "delivery_date": "2024-03-01",
+  "status": "approved",
+  "approved_by": "Anita Verma, VP Sales"
+}

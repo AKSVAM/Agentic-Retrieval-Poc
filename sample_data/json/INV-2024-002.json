@@ -1,0 +1,25 @@
+{
+  "document_type": "invoice",
+  "invoice_number": "INV-2024-002",
+  "date": "2024-02-10",
+  "due_date": "2024-03-26",
+  "vendor": "Global Supplies Co",
+  "vendor_gst": "27AABCG5678D1Z3",
+  "vendor_address": "56 Market Street, Mumbai - 400001",
+  "bill_to": "Facilities Dept, Presidio Corp India",
+  "project": "Mumbai Office Renovation",
+  "po_reference": "PO-2024-002",
+  "po_date": "2024-01-15",
+  "line_items": [
+    {"item": "Ergonomic Office Chair (set of 20)", "qty": 20, "unit_price": 12000, "total": 240000},
+    {"item": "Standing Desk (set of 10)", "qty": 10, "unit_price": 25000, "total": 250000},
+    {"item": "Whiteboard (1.8m x 1.2m)", "qty": 5, "unit_price": 8000, "total": 40000},
+    {"item": "Office Stationery Kit", "qty": 50, "unit_price": 500, "total": 25000}
+  ],
+  "subtotal": 555000,
+  "gst_18pct": 99900,
+  "total_amount": 654900,
+  "payment_status": "paid",
+  "payment_date": "2024-03-20",
+  "bank_account": "ICICI Bank | A/C: 0123456789012 | IFSC: ICIC0000123"
+}

@@ -1,0 +1,124 @@
+.wrapper {
+  max-width: 740px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.modeToggle {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.modeBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.modeBtn:first-child {
+  border-right: 1px solid var(--border-color);
+}
+
+.modeBtn.active {
+  background: var(--accent-color);
+  color: #fff;
+}
+
+.modeBtn:hover:not(.active) {
+  background: var(--border-color);
+}
+
+.inputRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  transition: border-color 0.15s;
+}
+
+.inputRow:focus-within {
+  border-color: var(--accent-color);
+}
+
+.textarea {
+  flex: 1;
+  resize: none;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: transparent;
+  font-family: inherit;
+  min-height: 24px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.textarea::placeholder {
+  color: #9ca3af;
+}
+
+.sendBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--accent-color);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.sendBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sendBtn:not(:disabled):hover {
+  background: var(--accent-hover);
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin: 6px 0 0;
+  text-align: center;
+}

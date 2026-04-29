@@ -1,0 +1,38 @@
+========================================
+          PURCHASE ORDER
+========================================
+PO Number    : PO-2024-002
+Date         : January 15, 2024
+Status       : APPROVED
+
+VENDOR
+------
+Global Supplies Co
+56 Market Street, Mumbai - 400001
+GSTIN: 27AABCG5678D1Z3
+
+SHIP TO
+-------
+Facilities Dept
+Presidio Corp India
+Bandra Kurla Complex, Mumbai - 400051
+Project: Mumbai Office Renovation
+
+LINE ITEMS
+----------
+No.  Description                     Qty    Unit Price      Amount
+1    Ergonomic Office Chair            20    Rs   12,000   Rs  2,40,000
+2    Standing Desk                     10    Rs   25,000   Rs  2,50,000
+3    Whiteboard (1.8m x 1.2m)          5    Rs    8,000   Rs    40,000
+4    Office Stationery Kit             50    Rs      500   Rs    25,000
+
+SUBTOTAL                                                  Rs  5,55,000
+GST @ 18%                                                 Rs    99,900
+TOTAL ORDER VALUE                                         Rs  6,54,900
+
+Payment Terms : Net 45
+Expected Delivery : February 5, 2024
+
+Approved By  : Priya Sharma, Admin Head
+Approval Date: January 16, 2024
+========================================

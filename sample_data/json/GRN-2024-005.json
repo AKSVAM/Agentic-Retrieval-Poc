@@ -1,0 +1,23 @@
+{
+  "document_type": "goods_receipt_note",
+  "grn_number": "GRN-2024-005",
+  "date": "2024-03-18",
+  "vendor": "Global Supplies Co",
+  "vendor_gst": "27AABCG5678D1Z3",
+  "project": "Delhi Sales Office Setup",
+  "warehouse": "Delhi CP Office - Floor 3",
+  "po_reference": "PO-2024-005",
+  "invoice_reference": "INV-2024-005",
+  "received_by": "Amit Singh, Sales IT Coordinator",
+  "line_items": [
+    {"item": "Ergonomic Office Chair", "qty_ordered": 15, "qty_received": 15, "condition": "good"},
+    {"item": "Executive Desk (1.6m)", "qty_ordered": 15, "qty_received": 15, "condition": "good"},
+    {"item": "Storage Pedestal", "qty_ordered": 15, "qty_received": 15, "condition": "good"},
+    {"item": "Conference Table (10-seater)", "qty_ordered": 1, "qty_received": 1, "condition": "minor_scratch", "remarks": "Minor scratch on edge, vendor notified"},
+    {"item": "Office Stationery Kit", "qty_ordered": 20, "qty_received": 20, "condition": "good"}
+  ],
+  "delivery_status": "complete",
+  "discrepancies": "Conference table has a minor scratch. Vendor offered 5% credit note.",
+  "quality_check": "conditional_pass",
+  "remarks": "Furniture assembled. Credit note of Rs 3250 to be raised by vendor against INV-2024-005."
+}

@@ -1,0 +1,172 @@
+{
+  "name": "procurement-entities",
+  "fields": [
+    {
+      "name": "entity_id",
+      "type": "Edm.String",
+      "key": true,
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "entity_name",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false,
+      "analyzer": "en.microsoft"
+    },
+    {
+      "name": "entity_type",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": true
+    },
+    {
+      "name": "entity_value",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": false,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "entity_aliases",
+      "type": "Collection(Edm.String)",
+      "searchable": true,
+      "filterable": false,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "related_entities",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": false,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "source_chunks",
+      "type": "Collection(Edm.String)",
+      "searchable": false,
+      "filterable": false,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "source_files",
+      "type": "Collection(Edm.String)",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": true
+    },
+    {
+      "name": "embedding",
+      "type": "Collection(Edm.Single)",
+      "searchable": true,
+      "retrievable": false,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "dimensions": 1024,
+      "vectorSearchProfile": "hnsw-profile"
+    },
+    {
+      "name": "mention_count",
+      "type": "Edm.Int32",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": true,
+      "facetable": false
+    },
+    {
+      "name": "last_seen",
+      "type": "Edm.DateTimeOffset",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": true,
+      "facetable": false
+    },
+    {
+      "name": "allowedUsers",
+      "type": "Collection(Edm.String)",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": false,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "allowedGroups",
+      "type": "Collection(Edm.String)",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": false,
+      "sortable": false,
+      "facetable": false
+    }
+  ],
+  "vectorSearch": {
+    "algorithms": [
+      {
+        "name": "hnsw-algo",
+        "kind": "hnsw",
+        "hnswParameters": {
+          "metric": "cosine",
+          "m": 4,
+          "efConstruction": 400,
+          "efSearch": 500
+        }
+      }
+    ],
+    "compressions": [
+      {
+        "name": "bq-compression",
+        "kind": "binaryQuantization",
+        "rescoringOptions": {
+          "enableRescoring": true,
+          "defaultOversampling": 10.0,
+          "rescoreStorageMethod": "preserveOriginals"
+        }
+      }
+    ],
+    "profiles": [
+      {
+        "name": "hnsw-profile",
+        "algorithm": "hnsw-algo",
+        "compression": "bq-compression"
+      }
+    ]
+  },
+  "semantic": {
+    "configurations": [
+      {
+        "name": "entity-semantic-config",
+        "prioritizedFields": {
+          "titleField": {"fieldName": "entity_name"},
+          "contentFields": [
+            {"fieldName": "entity_value"},
+            {"fieldName": "entity_aliases"}
+          ]
+        }
+      }
+    ]
+  }
+}
