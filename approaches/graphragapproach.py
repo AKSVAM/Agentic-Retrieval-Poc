@@ -75,7 +75,7 @@ class GraphRAGApproach:
 
         # Step 2: agentic hop loop
         all_discovered: dict[str, dict] = {}
-        all_chunk_ids: set[str] = set()
+        hop0_entity_ids: set[str] = set()
         entity_ids_to_fetch: list[str] = []
 
         for hop in range(self.max_hops):
@@ -93,10 +93,11 @@ class GraphRAGApproach:
                 eid = e.get("entity_id")
                 if eid and eid not in all_discovered:
                     all_discovered[eid] = e
-                    all_chunk_ids.update(e.get("source_chunks") or [])
+                    if hop == 0:
+                        hop0_entity_ids.add(eid)
 
             if hop < self.max_hops - 1:
-                entity_ids_to_fetch = await self._plan_next_hops(user_query, all_discovered, hop)
+                entity_ids_to_fetch, _ = await self._plan_next_hops(user_query, all_discovered, hop)
                 thought_steps.append({
                     "title": f"Hop {hop} — plan",
                     "description": f"Agent decided to follow {len(entity_ids_to_fetch)} entity IDs next."
@@ -105,9 +106,15 @@ class GraphRAGApproach:
                     thought_steps.append({"title": "Traversal complete", "description": "Agent signalled stop."})
                     break
 
-        # Step 3: fetch chunks
-        chunks = await self._fetch_chunks(list(all_chunk_ids))
-        thought_steps.append({"title": "Chunk retrieval", "description": f"Retrieved {len(chunks)} chunks from {len(all_discovered)} entities."})
+        # Step 3: fetch chunks from seed-relevant entities only (hop 0 noise filtered)
+        relevant_hop0 = {eid for eid in hop0_entity_ids if _entity_matches_seed(all_discovered[eid].get("entity_name", ""), seeds)}
+        followed_ids = set(all_discovered.keys()) - hop0_entity_ids
+        relevant_ids = (relevant_hop0 | followed_ids) or set(all_discovered.keys())
+        chunk_ids: set[str] = set()
+        for eid in relevant_ids:
+            chunk_ids.update(all_discovered[eid].get("source_chunks") or [])
+        chunks = await self._fetch_chunks(list(chunk_ids))
+        thought_steps.append({"title": "Chunk retrieval", "description": f"Retrieved {len(chunks)} chunks from {len(relevant_ids)} entities."})
 
         return await self._generate_answer(user_query, chunks, thought_steps, query_type="graphrag")
 
@@ -143,7 +150,8 @@ class GraphRAGApproach:
             return
 
         all_discovered: dict[str, dict] = {}
-        all_chunk_ids: set[str] = set()
+        hop0_entity_ids: set[str] = set()
+        all_name_maps: dict[str, str] = {}
         entity_ids_to_fetch: list[str] = []
 
         for hop in range(self.max_hops):
@@ -157,28 +165,39 @@ class GraphRAGApproach:
             new_names = [e.get("entity_name") for e in newly_found if e.get("entity_id") not in all_discovered]
             logger.info("[GraphRAG] Hop %d discovery: %d entities — %s", hop, len(newly_found), new_names)
             _combined = {**all_discovered, **{e["entity_id"]: e for e in newly_found if e.get("entity_id")}}
-            entity_payload = _build_entity_payload(newly_found, _combined, all_discovered)
+            related_ids_unknown = _collect_unknown_related_ids(newly_found, _combined)
+            hop_name_map = await self._fetch_entity_name_map(related_ids_unknown) if related_ids_unknown else {}
+            all_name_maps.update(hop_name_map)
+            enriched_lookup = {**_combined, **{eid: {"entity_name": name} for eid, name in all_name_maps.items()}}
+            entity_payload = _build_entity_payload(newly_found, enriched_lookup, all_discovered)
             yield _ts(f"Hop {hop} — entity discovery", f"Found {len(newly_found)} entities: {new_names[:8]}", "hop_discovery", entities=entity_payload)
 
             for e in newly_found:
                 eid = e.get("entity_id")
                 if eid and eid not in all_discovered:
                     all_discovered[eid] = e
-                    all_chunk_ids.update(e.get("source_chunks") or [])
+                    if hop == 0:
+                        hop0_entity_ids.add(eid)
 
             if hop < self.max_hops - 1:
-                entity_ids_to_fetch = await self._plan_next_hops(user_query, all_discovered, hop)
+                entity_ids_to_fetch, reasoning = await self._plan_next_hops(user_query, all_discovered, hop, all_name_maps)
                 logger.info("[GraphRAG] Hop %d plan: following %d entity IDs", hop, len(entity_ids_to_fetch))
-                yield _ts(f"Hop {hop} — plan", f"Agent decided to follow {len(entity_ids_to_fetch)} entity IDs next.", "hop_planning")
+                yield _ts(f"Hop {hop} — plan", f"Agent decided to follow {len(entity_ids_to_fetch)} entity IDs next.", "hop_planning", reasoning=reasoning)
                 if not entity_ids_to_fetch:
                     logger.info("[GraphRAG] Agent signalled stop at hop %d", hop)
                     yield _ts("Traversal complete", "Agent signalled stop.", "traversal_complete")
                     break
 
-        chunks = await self._fetch_chunks(list(all_chunk_ids))
+        relevant_hop0 = {eid for eid in hop0_entity_ids if _entity_matches_seed(all_discovered[eid].get("entity_name", ""), seeds)}
+        followed_ids = set(all_discovered.keys()) - hop0_entity_ids
+        relevant_ids = (relevant_hop0 | followed_ids) or set(all_discovered.keys())
+        chunk_ids: set[str] = set()
+        for eid in relevant_ids:
+            chunk_ids.update(all_discovered[eid].get("source_chunks") or [])
+        chunks = await self._fetch_chunks(list(chunk_ids))
         source_files = list({c.get("sourcefile", "") for c in chunks})
-        logger.info("[GraphRAG] Chunks retrieved: %d from %d entities, sources=%s", len(chunks), len(all_discovered), source_files)
-        yield _ts("Chunk retrieval", f"Retrieved {len(chunks)} chunks from {len(all_discovered)} entities.", "chunk_retrieval", chunks=_build_chunk_payload(chunks))
+        logger.info("[GraphRAG] Chunks retrieved: %d from %d entities (filtered from %d), sources=%s", len(chunks), len(relevant_ids), len(all_discovered), source_files)
+        yield _ts("Chunk retrieval", f"Retrieved {len(chunks)} chunks from {len(relevant_ids)} of {len(all_discovered)} entities.", "chunk_retrieval", chunks=_build_chunk_payload(chunks))
         yield _ts("Generating answer", "Synthesizing answer from retrieved context...", "answer_generation")
         result = await self._generate_answer(user_query, chunks, [], query_type="graphrag")
         logger.info("[GraphRAG] Answer generated | citations=%s", result["citations"])
@@ -266,8 +285,8 @@ class GraphRAGApproach:
 
         return results
 
-    async def _plan_next_hops(self, user_query: str, discovered: dict[str, dict], hop: int) -> list[str]:
-        summary = _summarize_entities(discovered, max_chars=3000)
+    async def _plan_next_hops(self, user_query: str, discovered: dict[str, dict], hop: int, name_map: dict[str, str] | None = None) -> tuple[list[str], str]:
+        summary = _summarize_entities(discovered, name_map or {}, max_chars=3000)
         prompt = (
             self._hop_prompt
             .replace("{{user_query}}", user_query)
@@ -286,13 +305,26 @@ class GraphRAGApproach:
             )
             tool_calls = resp.choices[0].message.tool_calls
             if not tool_calls:
-                return []
+                return [], ""
             args = json.loads(tool_calls[0].function.arguments)
-            logger.info("Hop %d planning reasoning: %s", hop, args.get("reasoning", ""))
-            return args.get("entity_ids_to_follow", [])
+            reasoning = args.get("reasoning", "")
+            logger.info("Hop %d planning reasoning: %s", hop, reasoning)
+            return args.get("entity_ids_to_follow", []), reasoning
         except Exception as e:
             logger.warning("Hop planning failed at hop %d: %s", hop, e)
-            return []
+            return [], ""
+
+    async def _fetch_entity_name_map(self, entity_ids: list[str]) -> dict[str, str]:
+        if not entity_ids:
+            return {}
+        result: dict[str, str] = {}
+        try:
+            fetched = self.entity_col.get(ids=entity_ids[:50], include=["metadatas"])
+            for eid, meta in zip(fetched["ids"], fetched["metadatas"]):
+                result[eid] = meta.get("entity_name", "")
+        except Exception as e:
+            logger.warning("Name map fetch failed: %s", e)
+        return result
 
     # -------------------------------------------------------------------------
     # Chunk retrieval
@@ -461,23 +493,52 @@ def _apply_document_diversity(chunks: list[dict], top_k: int) -> list[dict]:
     return result
 
 
-def _summarize_entities(discovered: dict[str, dict], max_chars: int = 3000) -> str:
+def _summarize_entities(discovered: dict[str, dict], name_map: dict[str, str], max_chars: int = 3000) -> str:
     lines = []
     for eid, e in discovered.items():
         related_raw = e.get("related_entities") or "[]"
         try:
             related = json.loads(related_raw)
-            related_ids = [r["entity_id"] for r in related[:5]]
+            related_summaries = []
+            for r in related[:5]:
+                rid = r.get("entity_id", "")
+                rname = name_map.get(rid, "")
+                rtype = r.get("relationship_type", "related_to")
+                related_summaries.append(f"{rid}({rname},{rtype})" if rname else f"{rid}({rtype})")
         except Exception:
-            related_ids = []
+            related_summaries = []
 
         line = (
             f"- entity_id={eid} | type={e.get('entity_type')} | "
             f"name={e.get('entity_name')} | "
-            f"related_to=[{', '.join(related_ids)}] | "
+            f"related_to=[{', '.join(related_summaries)}] | "
             f"files={e.get('source_files', [])[:2]}"
         )
         lines.append(line)
         if sum(len(l) for l in lines) > max_chars:
             break
     return "\n".join(lines)
+
+
+def _collect_unknown_related_ids(newly_found: list[dict], known: dict[str, dict]) -> list[str]:
+    ids: set[str] = set()
+    for e in newly_found:
+        related_raw = e.get("related_entities", "[]")
+        try:
+            rels = json.loads(related_raw) if isinstance(related_raw, str) else (related_raw or [])
+        except Exception:
+            rels = []
+        for r in rels:
+            rid = r.get("entity_id", "")
+            if rid and rid not in known:
+                ids.add(rid)
+    return list(ids)
+
+
+def _entity_matches_seed(entity_name: str, seeds: list[dict]) -> bool:
+    en = entity_name.lower()
+    for seed in seeds:
+        sn = seed.get("name", "").lower()
+        if sn and (sn in en or en in sn):
+            return True
+    return False

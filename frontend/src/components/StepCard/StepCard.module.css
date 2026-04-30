@@ -55,6 +55,14 @@
   line-height: 1.5;
 }
 
+.reasoning {
+  font-size: 11px;
+  color: #4b5563;
+  margin: 4px 0 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
 .note {
   margin-top: 8px;
   padding: 8px 10px;

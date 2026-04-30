@@ -35,6 +35,7 @@ export interface ThoughtStepEvent {
   title: string;
   description: string;
   step_type: StepType;
+  reasoning?: string;
   entities?: EntityData[];
   chunks?: ChunkData[];
 }

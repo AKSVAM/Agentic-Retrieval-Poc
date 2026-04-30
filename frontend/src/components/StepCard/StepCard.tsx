@@ -111,6 +111,9 @@ export default function StepCard({ step, firstStepTime, educationalNote }: StepC
         )}
       </div>
       <p className={styles.description}>{step.description}</p>
+      {step.reasoning && (
+        <p className={styles.reasoning}>{step.reasoning}</p>
+      )}
 
       {educationalNote && (
         <div className={styles.note}>{educationalNote}</div>
