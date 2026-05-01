@@ -123,6 +123,39 @@ async def search_stream(req: SearchRequest):
     )
 
 
+@app.get("/graph")
+async def get_graph():
+    entity_col: chromadb.Collection = _state["approach"].entity_col
+    results = entity_col.get(include=["metadatas"])
+
+    node_ids: set[str] = set(results["ids"])
+    nodes = []
+    edges = []
+
+    for eid, meta in zip(results["ids"], results["metadatas"]):
+        nodes.append({
+            "id": eid,
+            "name": meta.get("entity_name", eid),
+            "type": meta.get("entity_type", "unknown"),
+            "mention_count": meta.get("mention_count", 1),
+            "source_files": json.loads(meta.get("source_files", "[]")),
+        })
+        try:
+            related = json.loads(meta.get("related_entities", "[]"))
+        except Exception:
+            related = []
+        for r in related:
+            target = r.get("entity_id", "")
+            if target and target in node_ids:
+                edges.append({
+                    "source": eid,
+                    "target": target,
+                    "relationship_type": r.get("relationship_type", "related_to"),
+                })
+
+    return {"nodes": nodes, "edges": edges}
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok"}

@@ -69,3 +69,22 @@ export interface SearchResult {
   isStreaming: boolean;
   error: string | null;
 }
+
+export interface GraphNode {
+  id: string;
+  name: string;
+  type: string;
+  mention_count: number;
+  source_files: string[];
+}
+
+export interface GraphEdge {
+  source: string;
+  target: string;
+  relationship_type: string;
+}
+
+export interface GraphData {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+}

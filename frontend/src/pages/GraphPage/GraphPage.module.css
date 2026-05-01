@@ -1,0 +1,172 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 48px); /* subtract tab bar height */
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  flex-wrap: wrap;
+}
+
+.filterLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  user-select: none;
+}
+
+.filterChip.inactive {
+  opacity: 0.35;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.stats {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.resetBtn {
+  padding: 4px 12px;
+  font-size: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.resetBtn:hover {
+  background: var(--bg-secondary);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.canvas {
+  flex: 1;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.sidebar {
+  width: 260px;
+  border-left: 1px solid var(--border-color);
+  padding: 20px 16px;
+  overflow-y: auto;
+  background: var(--bg-primary);
+}
+
+.sidebarEmpty {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 40px;
+}
+
+.sidebarTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  word-break: break-word;
+}
+
+.sidebarBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.sidebarRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+
+.sidebarRowLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sidebarRowValue {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.fileList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fileItem {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  padding: 3px 8px;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.entityId {
+  font-size: 11px;
+  word-break: break-all;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
