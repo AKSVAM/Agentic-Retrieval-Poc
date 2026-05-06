@@ -7,25 +7,30 @@ import { useSearchStream } from "../../hooks/useSearchStream";
 import styles from "./SearchPage.module.css";
 
 export default function SearchPage() {
+  const { result: agentResult, search: searchAgent } = useSearchStream("auto");
   const { result: graphResult, search: searchGraph } = useSearchStream("graphrag");
   const { result: vectorResult, search: searchVector } = useSearchStream("vector");
-  const [activeMode, setActiveMode] = useState<SearchMode>("graphrag");
+  const [activeMode, setActiveMode] = useState<SearchMode>("auto");
 
   const isLoading =
-    (graphResult?.isStreaming ?? false) || (vectorResult?.isStreaming ?? false);
+    (agentResult?.isStreaming ?? false) ||
+    (graphResult?.isStreaming ?? false) ||
+    (vectorResult?.isStreaming ?? false);
 
   const handleSearch = useCallback(
     (query: string, mode: SearchMode) => {
       setActiveMode(mode);
-      searchGraph(query);
       if (mode === "compare") {
+        searchGraph(query);
         searchVector(query);
+      } else {
+        searchAgent(query);
       }
     },
-    [searchGraph, searchVector]
+    [searchAgent, searchGraph, searchVector]
   );
 
-  const hasResult = !!graphResult;
+  const hasResult = activeMode === "compare" ? !!graphResult : !!agentResult;
 
   return (
     <div className={styles.page}>
@@ -35,19 +40,19 @@ export default function SearchPage() {
 
       {hasResult && (
         <div className={styles.results}>
-          {activeMode === "graphrag" && (
+          {activeMode === "auto" && agentResult && (
             <div className={styles.singleLayout}>
               <ThinkingPanel
-                steps={graphResult.steps}
-                isStreaming={graphResult.isStreaming}
-                label="GraphRAG Traversal"
+                steps={agentResult.steps}
+                isStreaming={agentResult.isStreaming}
+                label="Agent Search"
               />
               <AnswerPanel
-                answer={graphResult.answer}
-                citations={graphResult.citations}
-                queryType={graphResult.queryType}
-                isStreaming={graphResult.isStreaming}
-                error={graphResult.error}
+                answer={agentResult.answer}
+                citations={agentResult.citations}
+                queryType={agentResult.queryType}
+                isStreaming={agentResult.isStreaming}
+                error={agentResult.error}
               />
             </div>
           )}

@@ -10,6 +10,7 @@ import {
   Sparkles,
   ChevronRight,
   ChevronDown,
+  Bot,
 } from "lucide-react";
 import type { ThoughtStep, StepType, EntityData } from "../../api/types";
 import ChunkCard from "../ChunkCard/ChunkCard";
@@ -24,6 +25,9 @@ const ICONS: Record<StepType, React.ReactNode> = {
   vector_search: <BarChart3 size={16} />,
   fallback: <AlertCircle size={16} />,
   answer_generation: <Sparkles size={16} />,
+  agent_turn: <Bot size={16} />,
+  no_tool_fallback: <AlertCircle size={16} />,
+  agent_fallback: <AlertCircle size={16} />,
 };
 
 const ENTITY_TYPE_COLORS: Record<string, string> = {

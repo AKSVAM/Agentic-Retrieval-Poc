@@ -2,7 +2,7 @@ import { useState, useRef, type KeyboardEvent } from "react";
 import { Send, GitBranch, Columns2 } from "lucide-react";
 import styles from "./SearchBar.module.css";
 
-export type SearchMode = "graphrag" | "compare";
+export type SearchMode = "auto" | "compare";
 
 interface SearchBarProps {
   onSearch: (query: string, mode: SearchMode) => void;
@@ -11,7 +11,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
   const [query, setQuery] = useState("");
-  const [mode, setMode] = useState<SearchMode>("graphrag");
+  const [mode, setMode] = useState<SearchMode>("auto");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   function handleSubmit() {
@@ -43,8 +43,8 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
 
       <div className={styles.modeToggle}>
         <button
-          className={`${styles.modeBtn} ${mode === "graphrag" ? styles.active : ""}`}
-          onClick={() => setMode("graphrag")}
+          className={`${styles.modeBtn} ${mode === "auto" ? styles.active : ""}`}
+          onClick={() => setMode("auto")}
         >
           <GitBranch size={14} />
           AI Search

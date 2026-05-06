@@ -1,0 +1,117 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "find_entities_by_name",
+      "description": "Search the entity graph for entities matching the given phrases. Returns entity details and their relationships.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phrases": {
+            "type": "array",
+            "description": "Entities to search for",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Entity name as mentioned in the query"
+                },
+                "entity_type": {
+                  "type": "string",
+                  "enum": ["vendor", "customer", "po", "invoice", "grn", "project", "item", "contact", "unknown"],
+                  "description": "The type of entity"
+                },
+                "search_phrase": {
+                  "type": "string",
+                  "description": "Canonical search phrase to match against the entity index"
+                }
+              },
+              "required": ["name", "entity_type", "search_phrase"]
+            }
+          }
+        },
+        "required": ["phrases"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "expand_entity_neighbors",
+      "description": "Fetch entities by their IDs and resolve their relationship names. Use this to traverse the graph from known entity IDs.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entity_ids": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of entity_id values to fetch"
+          }
+        },
+        "required": ["entity_ids"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "vector_search_chunks",
+      "description": "Search document chunks by semantic similarity. Returns short previews; use fetch_chunks_by_id for full text.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Natural language search query"
+          },
+          "k": {
+            "type": "integer",
+            "description": "Number of results to return (default: 15)"
+          }
+        },
+        "required": ["query"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "fetch_chunks_by_id",
+      "description": "Retrieve full text of document chunks by their IDs. Use after browsing previews from vector_search_chunks or entity source_chunk_ids.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "chunk_ids": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of chunk IDs to retrieve"
+          }
+        },
+        "required": ["chunk_ids"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "final_answer",
+      "description": "Provide the final answer to the user's question with source citations. Call this when you have enough context.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string",
+            "description": "The complete answer to the user's question, citing sources with [filename] labels"
+          },
+          "citations": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of source filenames referenced in the answer"
+          }
+        },
+        "required": ["answer", "citations"]
+      }
+    }
+  }
+]

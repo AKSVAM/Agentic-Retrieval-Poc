@@ -20,6 +20,9 @@
 .vector_search     { --step-color: #d97706; }
 .answer_generation { --step-color: #0078d4; }
 .fallback          { --step-color: #dc2626; }
+.agent_turn        { --step-color: #7c3aed; }
+.no_tool_fallback  { --step-color: #dc2626; }
+.agent_fallback    { --step-color: #d97706; }
 
 .header {
   display: flex;

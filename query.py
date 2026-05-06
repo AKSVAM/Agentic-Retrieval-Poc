@@ -2,9 +2,11 @@
 Interactive GraphRAG query CLI.
 
 Usage:
-    python query.py                   # Interactive loop
-    python query.py --query "..."     # Single query and exit
-    python query.py --no-graphrag     # Force keyword-only mode
+    python query.py                        # Interactive loop (agent mode)
+    python query.py --query "..."          # Single query and exit
+    python query.py --mode graphrag        # Force legacy multi-hop mode
+    python query.py --mode vector          # Force vector-only mode
+    python query.py --verbose              # Show thought steps
 """
 
 import argparse
@@ -12,12 +14,14 @@ import asyncio
 import json
 import logging
 import os
+import sys
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 import chromadb
 
 from approaches.graphragapproach import GraphRAGApproach
-from approaches.queryrouter import QueryRouter
+from approaches.agentrouter import AgentRouter
+from approaches.retrievers import Retrievers
 
 load_dotenv()
 logging.basicConfig(level=logging.WARNING)
@@ -29,10 +33,12 @@ CHROMADB_PATH = os.environ.get("CHROMADB_PATH", "./chromadb_data")
 CHAT_DEPLOYMENT = os.environ.get("AZURE_OPENAI_CHATGPT_DEPLOYMENT", "gpt-4o")
 EMB_DEPLOYMENT = os.environ.get("AZURE_OPENAI_EMB_DEPLOYMENT", "text-embedding-3-large")
 EMB_DIMENSIONS = int(os.environ.get("AZURE_OPENAI_EMB_DIMENSIONS", "1024"))
-USE_GRAPHRAG = os.environ.get("USE_GRAPHRAG", "true").lower() == "true"
 MAX_HOPS = int(os.environ.get("GRAPHRAG_MAX_HOPS", "3"))
+MAX_ENTITIES_PER_HOP = int(os.environ.get("GRAPHRAG_MAX_ENTITIES_PER_HOP", "10"))
 ENTITY_TOP_K = int(os.environ.get("GRAPHRAG_ENTITY_TOP_K", "5"))
 CHUNK_TOP_K = int(os.environ.get("GRAPHRAG_CHUNK_TOP_K", "15"))
+AGENT_MAX_TURNS = int(os.environ.get("AGENT_MAX_TURNS", "8"))
+AGENT_MAX_CHUNKS = int(os.environ.get("AGENT_MAX_CHUNKS", "20"))
 
 
 def _print_result(result: dict, verbose: bool = False) -> None:
@@ -52,24 +58,46 @@ def _print_result(result: dict, verbose: bool = False) -> None:
     print("=" * 70 + "\n")
 
 
-async def run_query(approach: GraphRAGApproach, router: QueryRouter, query: str, force_graphrag: bool = False) -> dict:
-    use_graph = force_graphrag or (USE_GRAPHRAG and router.should_use_graphrag(query))
-    if use_graph:
+async def run_query(
+    approach: GraphRAGApproach,
+    agent_router: AgentRouter,
+    retrievers: Retrievers,
+    query: str,
+    mode: str = "auto",
+) -> dict:
+    if mode in ("auto", "agent"):
+        print(f"\n[Agent] Running LLM tool-calling agent...")
+        result = await agent_router.run(query)
+    elif mode == "graphrag":
         print(f"\n[GraphRAG] Running agentic multi-hop retrieval...")
         result = await approach.run(query)
+    elif mode == "vector":
+        print(f"\n[Vector] Running keyword/vector search...")
+        chunks = await retrievers.keyword_fallback(query)
+        result = await approach._generate_answer(query, chunks, [], query_type="vector")
     else:
-        print(f"\n[Standard] Running keyword/vector search...")
-        result = await approach.run(query)
-        result["query_type"] = "standard_vector"
+        print(f"\n[Agent] Running LLM tool-calling agent...")
+        result = await agent_router.run(query)
     return result
 
 
 async def main():
     parser = argparse.ArgumentParser(description="GraphRAG.POC query CLI")
     parser.add_argument("--query", type=str, help="Single query (non-interactive)")
-    parser.add_argument("--no-graphrag", action="store_true", help="Force keyword-only mode")
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["auto", "agent", "graphrag", "vector"],
+        default="auto",
+        help="Retrieval mode (default: auto → agent)",
+    )
+    parser.add_argument("--no-graphrag", action="store_true", help="(Deprecated) Use --mode vector instead")
     parser.add_argument("--verbose", action="store_true", help="Show thought steps")
     args = parser.parse_args()
+
+    if args.no_graphrag:
+        print("Warning: --no-graphrag is deprecated. Use --mode vector instead.", file=sys.stderr)
+        args.mode = "vector"
 
     chroma_client = chromadb.PersistentClient(path=CHROMADB_PATH)
     chunk_col = chroma_client.get_or_create_collection(name=CHUNK_INDEX, metadata={"hnsw:space": "cosine"})
@@ -77,6 +105,16 @@ async def main():
     openai_client = AsyncOpenAI(
         api_key=os.environ.get("OPENAI_API_KEY", ""),
         base_url=os.environ.get("OPENAI_BASE_URL"),
+    )
+
+    retrievers = Retrievers(
+        openai_client=openai_client,
+        emb_deployment=EMB_DEPLOYMENT,
+        chunk_col=chunk_col,
+        entity_col=entity_col,
+        entity_top_k=ENTITY_TOP_K,
+        chunk_top_k=CHUNK_TOP_K,
+        max_entities_per_hop=MAX_ENTITIES_PER_HOP,
     )
 
     approach = GraphRAGApproach(
@@ -87,18 +125,27 @@ async def main():
         chunk_col=chunk_col,
         entity_col=entity_col,
         max_hops=MAX_HOPS,
+        max_entities_per_hop=MAX_ENTITIES_PER_HOP,
         entity_top_k=ENTITY_TOP_K,
         chunk_top_k=CHUNK_TOP_K,
+        retrievers=retrievers,
     )
-    router = QueryRouter()
+
+    agent_router = AgentRouter(
+        openai_client=openai_client,
+        chat_deployment=CHAT_DEPLOYMENT,
+        retrievers=retrievers,
+        max_turns=AGENT_MAX_TURNS,
+        max_chunks=AGENT_MAX_CHUNKS,
+    )
 
     if args.query:
-        result = await run_query(approach, router, args.query, force_graphrag=not args.no_graphrag)
+        result = await run_query(approach, agent_router, retrievers, args.query, mode=args.mode)
         _print_result(result, verbose=args.verbose)
         return
 
     print("\nGraphRAG.POC — Procurement Query Interface")
-    print("Type your question, or 'quit' to exit.")
+    print(f"Mode: {args.mode} | Type your question, or 'quit' to exit.")
     print("Tip: Try 'Show me all transactions with Acme Technologies'\n")
 
     while True:
@@ -111,7 +158,7 @@ async def main():
         if query.lower() in ("quit", "exit", "q"):
             break
 
-        result = await run_query(approach, router, query)
+        result = await run_query(approach, agent_router, retrievers, query, mode=args.mode)
         _print_result(result, verbose=args.verbose)
 
 

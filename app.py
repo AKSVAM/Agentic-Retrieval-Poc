@@ -26,7 +26,8 @@ from pydantic import BaseModel
 import chromadb
 
 from approaches.graphragapproach import GraphRAGApproach
-from approaches.queryrouter import QueryRouter
+from approaches.agentrouter import AgentRouter
+from approaches.retrievers import Retrievers
 
 load_dotenv()
 
@@ -45,6 +46,9 @@ MAX_HOPS = int(os.environ.get("GRAPHRAG_MAX_HOPS", "3"))
 MAX_ENTITIES_PER_HOP = int(os.environ.get("GRAPHRAG_MAX_ENTITIES_PER_HOP", "10"))
 ENTITY_TOP_K = int(os.environ.get("GRAPHRAG_ENTITY_TOP_K", "5"))
 CHUNK_TOP_K = int(os.environ.get("GRAPHRAG_CHUNK_TOP_K", "15"))
+AGENT_MAX_TURNS = int(os.environ.get("AGENT_MAX_TURNS", "8"))
+AGENT_MAX_CHUNKS = int(os.environ.get("AGENT_MAX_CHUNKS", "20"))
+AGENT_MAX_TOOL_RESULT_BYTES = int(os.environ.get("AGENT_MAX_TOOL_RESULT_BYTES", "8000"))
 
 _state: dict = {}
 
@@ -62,6 +66,17 @@ async def lifespan(app: FastAPI):
         api_key=os.environ.get("OPENAI_API_KEY", ""),
         base_url=os.environ.get("OPENAI_BASE_URL"),
     )
+
+    retrievers = Retrievers(
+        openai_client=openai_client,
+        emb_deployment=EMB_DEPLOYMENT,
+        chunk_col=chunk_col,
+        entity_col=entity_col,
+        entity_top_k=ENTITY_TOP_K,
+        chunk_top_k=CHUNK_TOP_K,
+        max_entities_per_hop=MAX_ENTITIES_PER_HOP,
+    )
+
     _state["approach"] = GraphRAGApproach(
         openai_client=openai_client,
         chat_deployment=CHAT_DEPLOYMENT,
@@ -73,8 +88,16 @@ async def lifespan(app: FastAPI):
         max_entities_per_hop=MAX_ENTITIES_PER_HOP,
         entity_top_k=ENTITY_TOP_K,
         chunk_top_k=CHUNK_TOP_K,
+        retrievers=retrievers,
     )
-    _state["router"] = QueryRouter()
+    _state["agent_router"] = AgentRouter(
+        openai_client=openai_client,
+        chat_deployment=CHAT_DEPLOYMENT,
+        retrievers=retrievers,
+        max_turns=AGENT_MAX_TURNS,
+        max_chunks=AGENT_MAX_CHUNKS,
+        max_tool_result_bytes=AGENT_MAX_TOOL_RESULT_BYTES,
+    )
     yield
 
 
@@ -90,24 +113,29 @@ app.add_middleware(
 
 class SearchRequest(BaseModel):
     query: str
-    mode: str = "auto"  # "auto" | "graphrag" | "vector"
+    mode: str = "auto"  # "auto" | "agent" | "graphrag" | "vector"
 
 
 @app.post("/search/stream")
 async def search_stream(req: SearchRequest):
     approach: GraphRAGApproach = _state["approach"]
-    router: QueryRouter = _state["router"]
+    agent_router: AgentRouter = _state["agent_router"]
 
     effective_mode = req.mode
     if effective_mode == "auto":
-        effective_mode = "graphrag" if router.should_use_graphrag(req.query) else "vector"
+        effective_mode = "agent"
 
     logger.info("Query received | mode=%s effective=%s | %r", req.mode, effective_mode, req.query)
 
     async def generate():
         event_count = 0
         try:
-            async for event in approach.run_streaming(req.query, mode=effective_mode):
+            if effective_mode == "agent":
+                stream = agent_router.run_streaming(req.query)
+            else:
+                stream = approach.run_streaming(req.query, mode=effective_mode)
+
+            async for event in stream:
                 yield json.dumps(event).encode() + b"\n"
                 event_count += 1
         except Exception:
@@ -125,7 +153,7 @@ async def search_stream(req: SearchRequest):
 
 @app.get("/graph")
 async def get_graph():
-    entity_col: chromadb.Collection = _state["approach"].entity_col
+    entity_col: chromadb.Collection = _state["approach"].retrievers.entity_col
     results = entity_col.get(include=["metadatas"])
 
     node_ids: set[str] = set(results["ids"])

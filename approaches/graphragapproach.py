@@ -6,6 +6,8 @@ from typing import AsyncGenerator
 from openai import AsyncOpenAI
 import chromadb
 
+from approaches.retrievers import Retrievers
+
 logger = logging.getLogger(__name__)
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
@@ -17,14 +19,6 @@ def _load_prompt(name: str) -> str:
 
 def _load_tools(name: str) -> list[dict]:
     return json.loads((PROMPTS_DIR / name).read_text(encoding="utf-8"))
-
-
-def _entity_from_chroma(entity_id: str, meta: dict) -> dict:
-    result = {"entity_id": entity_id, **meta}
-    for field in ("source_chunks", "source_files", "entity_aliases"):
-        if isinstance(result.get(field), str):
-            result[field] = json.loads(result[field] or "[]")
-    return result
 
 
 class GraphRAGApproach:
@@ -40,17 +34,25 @@ class GraphRAGApproach:
         max_entities_per_hop: int = 10,
         entity_top_k: int = 5,
         chunk_top_k: int = 15,
+        retrievers: Retrievers | None = None,
     ):
         self.openai = openai_client
         self.chat_deployment = chat_deployment
-        self.emb_deployment = emb_deployment
         self.emb_dimensions = emb_dimensions
-        self.chunk_col = chunk_col
-        self.entity_col = entity_col
         self.max_hops = max_hops
-        self.max_entities_per_hop = max_entities_per_hop
-        self.entity_top_k = entity_top_k
-        self.chunk_top_k = chunk_top_k
+
+        if retrievers is not None:
+            self.retrievers = retrievers
+        else:
+            self.retrievers = Retrievers(
+                openai_client=openai_client,
+                emb_deployment=emb_deployment,
+                chunk_col=chunk_col,
+                entity_col=entity_col,
+                entity_top_k=entity_top_k,
+                chunk_top_k=chunk_top_k,
+                max_entities_per_hop=max_entities_per_hop,
+            )
 
         self._extract_prompt = _load_prompt("graphrag_entity_extract.prompty")
         self._extract_tools = _load_tools("graphrag_entity_extract_tools.json")
@@ -70,7 +72,7 @@ class GraphRAGApproach:
 
         if not seeds:
             thought_steps.append({"title": "Fallback", "description": "No entities found — falling back to keyword search."})
-            chunks = await self._keyword_fallback(user_query)
+            chunks = await self.retrievers.keyword_fallback(user_query)
             return await self._generate_answer(user_query, chunks, thought_steps, query_type="keyword_fallback")
 
         # Step 2: agentic hop loop
@@ -80,11 +82,11 @@ class GraphRAGApproach:
 
         for hop in range(self.max_hops):
             if hop == 0:
-                newly_found = await self._search_entities_by_phrase(seeds)
+                newly_found = await self.retrievers.search_entities_by_phrase(seeds)
             else:
                 if not entity_ids_to_fetch:
                     break
-                newly_found = await self._fetch_entities_by_ids(entity_ids_to_fetch)
+                newly_found = await self.retrievers.fetch_entities_by_ids(entity_ids_to_fetch)
 
             new_names = [e.get("entity_name") for e in newly_found if e.get("entity_id") not in all_discovered]
             thought_steps.append({"title": f"Hop {hop} — entity discovery", "description": f"Found {len(newly_found)} entities: {new_names[:8]}"})
@@ -113,7 +115,7 @@ class GraphRAGApproach:
         chunk_ids: set[str] = set()
         for eid in relevant_ids:
             chunk_ids.update(all_discovered[eid].get("source_chunks") or [])
-        chunks = await self._fetch_chunks(list(chunk_ids))
+        chunks = await self.retrievers.fetch_chunks(list(chunk_ids))
         thought_steps.append({"title": "Chunk retrieval", "description": f"Retrieved {len(chunks)} chunks from {len(relevant_ids)} entities."})
 
         return await self._generate_answer(user_query, chunks, thought_steps, query_type="graphrag")
@@ -141,7 +143,7 @@ class GraphRAGApproach:
         if not seeds:
             logger.info("[GraphRAG] No seeds — falling back to vector search")
             yield _ts("Fallback", "No entities found — falling back to keyword/vector search.", "fallback")
-            chunks = await self._keyword_fallback(user_query)
+            chunks = await self.retrievers.keyword_fallback(user_query)
             logger.info("[GraphRAG] Fallback retrieved %d chunks", len(chunks))
             yield _ts("Vector search", f"Retrieved {len(chunks)} chunks via embedding similarity.", "vector_search")
             yield _ts("Generating answer", "Synthesizing answer from retrieved context...", "answer_generation")
@@ -156,17 +158,17 @@ class GraphRAGApproach:
 
         for hop in range(self.max_hops):
             if hop == 0:
-                newly_found = await self._search_entities_by_phrase(seeds)
+                newly_found = await self.retrievers.search_entities_by_phrase(seeds)
             else:
                 if not entity_ids_to_fetch:
                     break
-                newly_found = await self._fetch_entities_by_ids(entity_ids_to_fetch)
+                newly_found = await self.retrievers.fetch_entities_by_ids(entity_ids_to_fetch)
 
             new_names = [e.get("entity_name") for e in newly_found if e.get("entity_id") not in all_discovered]
             logger.info("[GraphRAG] Hop %d discovery: %d entities — %s", hop, len(newly_found), new_names)
             _combined = {**all_discovered, **{e["entity_id"]: e for e in newly_found if e.get("entity_id")}}
             related_ids_unknown = _collect_unknown_related_ids(newly_found, _combined)
-            hop_name_map = await self._fetch_entity_name_map(related_ids_unknown) if related_ids_unknown else {}
+            hop_name_map = await self.retrievers.fetch_entity_name_map(related_ids_unknown) if related_ids_unknown else {}
             all_name_maps.update(hop_name_map)
             enriched_lookup = {**_combined, **{eid: {"entity_name": name} for eid, name in all_name_maps.items()}}
             entity_payload = _build_entity_payload(newly_found, enriched_lookup, all_discovered)
@@ -194,7 +196,7 @@ class GraphRAGApproach:
         chunk_ids: set[str] = set()
         for eid in relevant_ids:
             chunk_ids.update(all_discovered[eid].get("source_chunks") or [])
-        chunks = await self._fetch_chunks(list(chunk_ids))
+        chunks = await self.retrievers.fetch_chunks(list(chunk_ids))
         source_files = list({c.get("sourcefile", "") for c in chunks})
         logger.info("[GraphRAG] Chunks retrieved: %d from %d entities (filtered from %d), sources=%s", len(chunks), len(relevant_ids), len(all_discovered), source_files)
         yield _ts("Chunk retrieval", f"Retrieved {len(chunks)} chunks from {len(relevant_ids)} of {len(all_discovered)} entities.", "chunk_retrieval", chunks=_build_chunk_payload(chunks))
@@ -206,7 +208,7 @@ class GraphRAGApproach:
     async def _run_vector_streaming(self, user_query: str) -> AsyncGenerator[dict, None]:
         logger.info("[Vector] START query=%r", user_query)
         yield _ts("Query embedding", f"Embedding query → {self.emb_dimensions}-dim vector", "vector_search")
-        chunks = await self._keyword_fallback(user_query)
+        chunks = await self.retrievers.keyword_fallback(user_query)
         source_files = list({c.get("sourcefile", "") for c in chunks})
         logger.info("[Vector] Retrieved %d chunks, sources=%s", len(chunks), source_files)
         yield _ts("Top-K chunk retrieval", f"Cosine similarity → top {len(chunks)} chunks (no relationship awareness)", "vector_search", chunks=_build_chunk_payload(chunks))
@@ -238,53 +240,6 @@ class GraphRAGApproach:
             logger.warning("Seed extraction failed: %s", e)
             return []
 
-    async def _search_entities_by_phrase(self, seeds: list[dict]) -> list[dict]:
-        results = []
-        count = self.entity_col.count()
-        if count == 0:
-            return results
-
-        for seed in seeds:
-            phrase = seed.get("search_phrase", seed.get("name", ""))
-            entity_type = seed.get("entity_type")
-
-            embedding = await self._embed(phrase)
-            n = min(self.entity_top_k, count)
-            where = {"entity_type": entity_type} if entity_type and entity_type != "unknown" else None
-
-            try:
-                kwargs = dict(
-                    query_embeddings=[embedding],
-                    n_results=n,
-                    include=["metadatas"],
-                )
-                if where:
-                    kwargs["where"] = where
-                search_results = self.entity_col.query(**kwargs)
-                for eid, meta in zip(search_results["ids"][0], search_results["metadatas"][0]):
-                    results.append(_entity_from_chroma(eid, meta))
-            except Exception as e:
-                logger.warning("Entity semantic search failed for '%s': %s", phrase, e)
-
-        return _deduplicate_by_id(results)
-
-    async def _fetch_entities_by_ids(self, entity_ids: list[str]) -> list[dict]:
-        if not entity_ids:
-            return []
-
-        results = []
-        try:
-            fetched = self.entity_col.get(
-                ids=entity_ids[: self.max_entities_per_hop],
-                include=["metadatas"],
-            )
-            for eid, meta in zip(fetched["ids"], fetched["metadatas"]):
-                results.append(_entity_from_chroma(eid, meta))
-        except Exception as e:
-            logger.warning("Entity ID fetch failed: %s", e)
-
-        return results
-
     async def _plan_next_hops(self, user_query: str, discovered: dict[str, dict], hop: int, name_map: dict[str, str] | None = None) -> tuple[list[str], str]:
         summary = _summarize_entities(discovered, name_map or {}, max_chars=3000)
         prompt = (
@@ -313,61 +268,6 @@ class GraphRAGApproach:
         except Exception as e:
             logger.warning("Hop planning failed at hop %d: %s", hop, e)
             return [], ""
-
-    async def _fetch_entity_name_map(self, entity_ids: list[str]) -> dict[str, str]:
-        if not entity_ids:
-            return {}
-        result: dict[str, str] = {}
-        try:
-            fetched = self.entity_col.get(ids=entity_ids[:50], include=["metadatas"])
-            for eid, meta in zip(fetched["ids"], fetched["metadatas"]):
-                result[eid] = meta.get("entity_name", "")
-        except Exception as e:
-            logger.warning("Name map fetch failed: %s", e)
-        return result
-
-    # -------------------------------------------------------------------------
-    # Chunk retrieval
-    # -------------------------------------------------------------------------
-
-    async def _fetch_chunks(self, chunk_ids: list[str]) -> list[dict]:
-        if not chunk_ids:
-            return []
-
-        chunks = []
-        try:
-            fetched = self.chunk_col.get(
-                ids=chunk_ids[: self.chunk_top_k * 2],
-                include=["metadatas", "documents"],
-            )
-            for cid, meta, doc in zip(fetched["ids"], fetched["metadatas"], fetched["documents"]):
-                chunks.append({"id": cid, "content": doc, **meta})
-        except Exception as e:
-            logger.warning("Chunk fetch failed: %s", e)
-
-        return _apply_document_diversity(chunks, self.chunk_top_k)
-
-    async def _keyword_fallback(self, query: str) -> list[dict]:
-        count = self.chunk_col.count()
-        if count == 0:
-            return []
-
-        embedding = await self._embed(query)
-        n = min(self.chunk_top_k, count)
-
-        chunks = []
-        try:
-            results = self.chunk_col.query(
-                query_embeddings=[embedding],
-                n_results=n,
-                include=["metadatas", "documents"],
-            )
-            for cid, meta, doc in zip(results["ids"][0], results["metadatas"][0], results["documents"][0]):
-                chunks.append({"id": cid, "content": doc, **meta})
-        except Exception as e:
-            logger.warning("Keyword fallback search failed: %s", e)
-
-        return chunks
 
     # -------------------------------------------------------------------------
     # Answer generation
@@ -404,17 +304,6 @@ class GraphRAGApproach:
             "thought_steps": thought_steps,
             "query_type": query_type,
         }
-
-    # -------------------------------------------------------------------------
-    # Embedding helper
-    # -------------------------------------------------------------------------
-
-    async def _embed(self, text: str) -> list[float]:
-        resp = await self.openai.embeddings.create(
-            model=self.emb_deployment,
-            input=text,
-        )
-        return resp.data[0].embedding
 
 
 # -------------------------------------------------------------------------
@@ -466,31 +355,6 @@ def _build_chunk_payload(chunks: list[dict]) -> list[dict]:
         }
         for c in chunks
     ]
-
-
-def _deduplicate_by_id(items: list[dict]) -> list[dict]:
-    seen: set[str] = set()
-    result = []
-    for item in items:
-        eid = item.get("entity_id")
-        if eid and eid not in seen:
-            seen.add(eid)
-            result.append(item)
-    return result
-
-
-def _apply_document_diversity(chunks: list[dict], top_k: int) -> list[dict]:
-    seen_files: dict[str, int] = {}
-    result = []
-    for c in chunks:
-        f = c.get("sourcefile", "")
-        count = seen_files.get(f, 0)
-        if count < 3:
-            result.append(c)
-            seen_files[f] = count + 1
-        if len(result) >= top_k:
-            break
-    return result
 
 
 def _summarize_entities(discovered: dict[str, dict], name_map: dict[str, str], max_chars: int = 3000) -> str:

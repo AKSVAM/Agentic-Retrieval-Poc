@@ -6,7 +6,10 @@ export type StepType =
   | "chunk_retrieval"
   | "vector_search"
   | "fallback"
-  | "answer_generation";
+  | "answer_generation"
+  | "agent_turn"
+  | "no_tool_fallback"
+  | "agent_fallback";
 
 export interface ChunkData {
   id: string;

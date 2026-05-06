@@ -14,12 +14,16 @@ const BADGE_LABELS: Record<string, string> = {
   graphrag: "GraphRAG",
   vector: "Standard RAG",
   keyword_fallback: "Vector Fallback",
+  agent: "Agent",
+  agent_fallback: "Agent Fallback",
 };
 
 const BADGE_CLASSES: Record<string, string> = {
   graphrag: "blue",
   vector: "amber",
   keyword_fallback: "gray",
+  agent: "blue",
+  agent_fallback: "gray",
 };
 
 export default function AnswerPanel({
